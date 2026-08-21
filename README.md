@@ -6,17 +6,17 @@ independent GEO cohorts (GSE31210, GSE30219, GSE72094).
 
 ## Pipeline overview
 
-1. data_io.py — loads clinical + miRNA + gene expression, builds (survival_months, event) outcome, restricts to primary tumor samples.
-2. screening.py — univariate Cox screening with Benjamini-Hochberg FDR correction, run separately per feature type (miRNA vs. gene) to avoid the smaller miRNA feature space being diluted by the larger gene space under a single pooled correction.
-3. nested_cv.py — fully nested 5x5 cross-validation: screening and elastic-net (l1_ratio, alpha) hyperparameter selection are repeated inside every outer training fold; the outer test fold is touched only once, for the final unbiased metric.
-4. evaluation.py — censoring-aware metrics: IPCW concordance index, time-dependent AUC, Brier score, PH assumption testing (Schoenfeld residuals), calibration by risk group.
-5. consensus_model.py / lock_consensus_model.py — locks a 4-feature model (features selected as nonzero in >=2/5 outer folds), with standardization statistics and risk thresholds frozen from the training set and saved for reuse.
-6. lock_3gene_external_model.py — a second locked model restricted to the 3 genes measurable on GEO microarray platforms (miRNA is not  available externally); used specifically for cross-platform validation, since applying a 4-term model's threshold to 3-term external scores produces a scale mismatch.
-7. build_external_validation_datasets.py / run_external_validation.py — builds and scores the four GEO cohorts, using per-cohort self-standardization (each cohort's own mean/SD) since absolute expression scale is not comparable across platforms (TCGA RNA-seq vs. Affymetrix/Agilent microarray).
-8. 'comparator_signatures.py' / 'map_comparator_genes.py' / 'run_comparison.py' — reconstructs published comparator gene
+1. `data_io.py` — loads clinical + miRNA + gene expression, builds (survival_months, event) outcome, restricts to primary tumor samples.
+2. `screening.py` — univariate Cox screening with Benjamini-Hochberg FDR correction, run separately per feature type (miRNA vs. gene) to avoid the smaller miRNA feature space being diluted by the larger gene space under a single pooled correction.
+3. `nested_cv.py` — fully nested 5x5 cross-validation: screening and elastic-net (l1_ratio, alpha) hyperparameter selection are repeated inside every outer training fold; the outer test fold is touched only once, for the final unbiased metric.
+4. `evaluation.py` — censoring-aware metrics: IPCW concordance index, time-dependent AUC, Brier score, PH assumption testing (Schoenfeld residuals), calibration by risk group.
+5. `consensus_model.py` / `lock_consensus_model.py` — locks a 4-feature model (features selected as nonzero in >=2/5 outer folds), with standardization statistics and risk thresholds frozen from the training set and saved for reuse.
+6. `lock_3gene_external_model.py` — a second locked model restricted to the 3 genes measurable on GEO microarray platforms (miRNA is not  available externally); used specifically for cross-platform validation, since applying a 4-term model's threshold to 3-term external scores produces a scale mismatch.
+7. `build_external_validation_datasets.py` / `run_external_validation.py` — builds and scores the four GEO cohorts, using per-cohort self-standardization (each cohort's own mean/SD) since absolute expression scale is not comparable across platforms (TCGA RNA-seq vs. Affymetrix/Agilent microarray).
+8. `comparator_signatures.py` / `map_comparator_genes.py` / `run_comparison.py` — reconstructs published comparator gene
    signatures and scores them on the identical train/holdout split and metrics as the study's own model.
-9. 'run_rsf_comparison.py' — Random Survival Forest on the same 4 consensus features, for an ML-vs-Cox comparison under identical censoring-aware evaluation.
-10. 'reproducibility.py' — writes run manifest, fold-level results, selected feature lists, coefficients, thresholds, and patient ID lists to `repo_artifacts/` for full reproducibility.
+9. `run_rsf_comparison.py` — Random Survival Forest on the same 4 consensus features, for an ML-vs-Cox comparison under identical censoring-aware evaluation.
+10. `reproducibility.py` — writes run manifest, fold-level results, selected feature lists, coefficients, thresholds, and patient ID lists to `repo_artifacts/` for full reproducibility.
 
 ## Setup
 
