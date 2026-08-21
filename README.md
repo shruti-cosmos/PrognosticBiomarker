@@ -25,9 +25,9 @@ pip install -r requirements.txt
 ```
 
 Place raw data files in `data/`:
-- lung_clinical_cleaned_1.csv
-- TCGA-LUAD_mirna_sorted_f.csv
-- merged_output.csv (genome-wide gene expression)
+- TCGA-LUAD_clinical.csv
+- TCGA-LUAD_mirna.csv
+- TCGA-LUAD_gene.csv (genome-wide gene expression)
 
 Place GEO downloads (per-gene expression CSVs + clinical CSVs) in
 `data/external/` and run `build_external_validation_datasets.py`
